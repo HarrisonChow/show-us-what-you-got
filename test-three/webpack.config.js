@@ -1,22 +1,41 @@
-module.exports = {
-  context: __dirname + "/app",
+var path = require('path');
 
-  entry: "./js/app.js",
-
+var config = {
+  context: path.resolve(__dirname + '/src'),
+  entry: './index.jsx',
   output: {
-    filename: "app.js",
-    path: __dirname + "/dist",
+    filename: 'app.js',
+    path: path.resolve(__dirname + '/dist'),
   },
-  resolve: {
-    extensions: ['', '.js', '.jsx', '.json']
+  devServer: {
+    contentBase: path.join(__dirname + '/dist'),
+    port: 3000,
+    open: true,
   },
   module: {
     loaders: [
       {
-        test: /\.jsx?$/,
+        test: /\.(js|jsx)$/,
         exclude: /node_modules/,
-        loaders: ["babel-loader"]
-      }
-    ]
-  }
+        loader: 'babel-loader'
+      },
+      {
+        test: /\.css$/,
+        loader: "style-loader!css-loader"
+      },
+      {
+        test: /\.gif$/,
+        loaders: [
+          'file-loader?name=[path][name].[ext]',
+          'image-webpack-loader',
+        ]
+      },
+      { test: /\.(html)$/,
+        loader: "file-loader?name=[path][name].[ext]"
+      },
+      { test: /\.json$/, loader: 'json-loader' },
+    ],
+  },
 };
+
+module.exports = config;
